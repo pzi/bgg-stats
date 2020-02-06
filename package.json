@@ -1,0 +1,24 @@
+{
+  "name": "bgg-stats",
+  "description": "Random ways of extracting data from BGG.",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "repository": "git@github.com:pzi/bgg-stats.git",
+  "author": "Patrik Affentranger <patrik.affentranger@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "xml2js": "^0.4.23",
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.0",
+    "@types/xml2js": "^0.4.5",
+    "@types/yargs": "^15.0.3",
+    "typescript": "^3.7.5"
+  }
+}
