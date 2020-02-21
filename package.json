@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "colors": "^1.4.0",
+    "node-fetch": "^2.6.0",
     "xml2js": "^0.4.23",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
+    "@types/node-fetch": "^2.5.4",
     "@types/xml2js": "^0.4.5",
     "@types/yargs": "^15.0.3",
     "dotenv": "^8.2.0",
