@@ -21,6 +21,8 @@ async function parseResult(data: any) {
     })
     if (isCollection(result)) {
       calculateTotal(reformatter(result.items.item))
+    } else {
+      console.log(data)
     }
   } catch (error) {
     console.error(error)
@@ -40,7 +42,6 @@ const result = (error: any, statusCode?: any, headers?: any, body?: any) => {
   if (statusCode === 202) {
     return console.log('Generating updated results...')
   }
-  // console.log('HEADERS:', JSON.stringify(headers))
   parseResult(body)
 }
 

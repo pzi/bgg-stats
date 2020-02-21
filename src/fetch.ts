@@ -1,51 +1,41 @@
-require('dotenv').config()
+require("dotenv").config();
+import fetch, { Response } from "node-fetch";
 
-export function fetchCollection(callback: any) {
-  'use strict'
-
-  const httpTransport = require('https')
-  const responseEncoding = 'utf8'
-  const httpOptions = {
-    hostname: 'boardgamegeek.com',
-    port: '443',
-    path: `/xmlapi2/collection/?username=${process.env.BGG_USERNAME}&own=1&prevowned=0&preordered=0&wanttobuy=0&wishlist=0&want=0&showprivate=1`,
-    method: 'POST',
-    headers: {
-      Cookie: `bggusername=${process.env.BGG_USERNAME}; bggpassword=${process.env.BGG_PASSWORD}`
-    }
+function handleResponse (response: Response) {
+  let contentType = response.headers.get('content-type')
+  if (contentType?.includes('application/json')) {
+    // return handleJSONResponse(response)
+    return response.json()
+  } else if (contentType?.includes('text/html') || contentType?.includes('text/xml')) {
+    return response.text()
+  } else {
+    throw new Error(`Content-type ${contentType} not supported.`)
   }
-
-  // httpOptions.headers['User-Agent'] = 'node ' + process.version
-
-  // Paw Follow Redirects option is not supported
-  // Paw Store Cookies option is not supported
-
-  const request = httpTransport
-    .request(httpOptions, (res: any) => {
-      let responseBufs: any = []
-      let responseStr = ''
-
-      res
-        .on('data', (chunk: any) => {
-          if (Buffer.isBuffer(chunk)) {
-            responseBufs.push(chunk)
-          } else {
-            responseStr = responseStr + chunk
-          }
-        })
-        .on('end', () => {
-          responseStr =
-            responseBufs.length > 0
-              ? Buffer.concat(responseBufs).toString(responseEncoding)
-              : responseStr
-
-          callback(null, res.statusCode, res.headers, responseStr)
-        })
-    })
-    .setTimeout(0)
-    .on('error', (error: any) => {
-      callback(error)
-    })
-  request.write('')
-  request.end()
 }
+
+type fetchCollection = (callback: (error: string | null, status?: number | null, header?: any, body?: any) => void) => void
+export const fetchCollection: fetchCollection = (callback) => {
+  const query = new URLSearchParams()
+  query.set('username', `${process.env.BGG_USERNAME}`)
+  query.set('own', '1')
+  query.set('showprivate', '1')
+  query.set('prevowned', '0')
+  query.set('preordered', '0')
+  query.set('wanttobuy', '0')
+  query.set('wishlist', '0')
+  query.set('want', '0')
+
+  fetch(
+    `https://boardgamegeek.com/xmlapi2/collection/?${query.toString()}`,
+    {
+      method: "POST",
+      headers: {
+        Cookie:
+        `bggusername=${process.env.BGG_USERNAME}; bggpassword=${process.env.BGG_PASSWORD}`
+      }
+    }
+  ).then(handleResponse)
+    .then(text => callback(null, null, null, text))
+    .catch(error => callback(error));
+}
+
