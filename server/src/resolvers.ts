@@ -1,6 +1,6 @@
-import { Resolvers } from './resolvers-types'
+import { Resolvers } from './graphql-types'
 
-export const resolvers = {
+const resolvers = {
   Query: {
     getThingById: (_: any, { id }: any, { dataSources }: any) =>
       dataSources.bggAPI.getThingById({ id })

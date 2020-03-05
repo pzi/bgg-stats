@@ -23,14 +23,14 @@ export type Query = {
 
 
 export type QueryGetThingByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['Int']
 };
 
 export type Thing = {
    __typename?: 'Thing',
-  id?: Maybe<Scalars['ID']>,
-  name?: Maybe<Scalars['String']>,
-  description?: Maybe<Scalars['String']>,
+  id: Scalars['Int'],
+  name: Scalars['String'],
+  description: Scalars['String'],
 };
 
 
@@ -108,7 +108,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>,
-  ID: ResolverTypeWrapper<Scalars['ID']>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
   Thing: ResolverTypeWrapper<Thing>,
   String: ResolverTypeWrapper<Scalars['String']>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
@@ -119,7 +119,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {},
-  ID: Scalars['ID'],
+  Int: Scalars['Int'],
   Thing: Thing,
   String: Scalars['String'],
   Boolean: Scalars['Boolean'],
@@ -132,9 +132,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type ThingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Thing'] = ResolversParentTypes['Thing']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 

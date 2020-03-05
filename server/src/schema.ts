@@ -2,18 +2,18 @@ import { gql } from 'apollo-server'
 
 const typeDefs = gql`
   type Query {
-    getThingById(id: ID!): Thing
+    getThingById(id: Int!): Thing
   }
 
   """
   A Thing.
   """
   type Thing {
-    id: ID
+    id: Int!
     "The name of the Thing."
-    name: String
+    name: String!
     "The description of the Thing."
-    description: String
+    description: String!
   }
 `
 
