@@ -1,0 +1,27 @@
+{
+  "name": "bgg-grapqhl-server",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "author": "Patrik Affentranger",
+  "license": "WTFPL",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --exec ts-node src/index.ts",
+    "generate": "graphql-codegen"
+  },
+  "dependencies": {
+    "apollo-datasource-rest": "^0.8.0",
+    "apollo-server": "^2.11.0",
+    "graphql": "^14.6.0",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.12.2",
+    "@graphql-codegen/typescript": "^1.12.2",
+    "@graphql-codegen/typescript-resolvers": "^1.12.2",
+    "@types/xml2js": "^0.4.5",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  }
+}
