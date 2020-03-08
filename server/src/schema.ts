@@ -15,33 +15,74 @@ const typeDefs = gql`
     rpgissue
   }
 
+  type Name {
+    "The name of the Thing."
+    primary: String!
+    "The alternative names of a Thing (i.e. in different language)"
+    alternate: [String!]
+  }
+
+  enum LINKTYPE {
+    boardgamecategory,
+    boardgamemechanic,
+    boardgamefamily,
+    boardgamedesigner,
+    boardgameartist,
+    boardgamepublisher,
+    boardgameexpansion,
+    boardgamecompilation
+  }
+
+  type Link {
+    type: LINKTYPE!
+    id: Int!
+    value: String!
+  }
+
   """
   Any physical, tangible product in the BGG database is called a thing.
   """
   type Thing {
     "The ID of the thing."
     id: Int!
-
+    
+    "The BGG database type of the Thing."
     type: THINGTYPE!
 
-    "The name of the Thing."
-    name: String!
-
-    "The alternative names of a Thing (i.e. in different language)"
-    alternate_names: [String!]
+    "All the names of a Thing."
+    name: Name
 
     "The description of the Thing."
     description: String
 
-    thumbnail: String
-
+    "High resolution image of the Thing."
     image: String
 
+    "Smaller version of the image."
+    thumbnail: String
+
+    "The year when the Thing was published."
     yearpublished: Int
 
+    "The advertised minimum player number."
     minplayers: Int
 
+    "The advertised maximum player number."
     maxplayers: Int
+
+    "The advertised playing time."
+    playingtime: Int
+
+    "The advertised minimum playing time."
+    minplaytime: Int
+
+    "The advertised maximum playing time."
+    maxplaytime: Int
+
+    "The recommended minimum player age."
+    minage: Int
+
+    link: [Link]
   }
 `
 

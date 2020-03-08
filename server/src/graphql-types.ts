@@ -16,6 +16,30 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
+export type Link = {
+   __typename?: 'Link',
+  type: Linktype,
+  id: Scalars['Int'],
+  value: Scalars['String'],
+};
+
+export enum Linktype {
+  Boardgamecategory = 'boardgamecategory',
+  Boardgamemechanic = 'boardgamemechanic',
+  Boardgamefamily = 'boardgamefamily',
+  Boardgamedesigner = 'boardgamedesigner',
+  Boardgameartist = 'boardgameartist',
+  Boardgamepublisher = 'boardgamepublisher',
+  Boardgameexpansion = 'boardgameexpansion',
+  Boardgamecompilation = 'boardgamecompilation'
+}
+
+export type Name = {
+   __typename?: 'Name',
+  primary: Scalars['String'],
+  alternate?: Maybe<Array<Scalars['String']>>,
+};
+
 export type Query = {
    __typename?: 'Query',
   getThingById?: Maybe<Thing>,
@@ -30,14 +54,18 @@ export type Thing = {
    __typename?: 'Thing',
   id: Scalars['Int'],
   type: Thingtype,
-  name: Scalars['String'],
-  alternate_names?: Maybe<Array<Scalars['String']>>,
+  name?: Maybe<Name>,
   description?: Maybe<Scalars['String']>,
-  thumbnail?: Maybe<Scalars['String']>,
   image?: Maybe<Scalars['String']>,
+  thumbnail?: Maybe<Scalars['String']>,
   yearpublished?: Maybe<Scalars['Int']>,
   minplayers?: Maybe<Scalars['Int']>,
   maxplayers?: Maybe<Scalars['Int']>,
+  playingtime?: Maybe<Scalars['Int']>,
+  minplaytime?: Maybe<Scalars['Int']>,
+  maxplaytime?: Maybe<Scalars['Int']>,
+  minage?: Maybe<Scalars['Int']>,
+  link?: Maybe<Array<Maybe<Link>>>,
 };
 
 export enum Thingtype {
@@ -128,7 +156,10 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Thing: ResolverTypeWrapper<Thing>,
   THINGTYPE: Thingtype,
+  Name: ResolverTypeWrapper<Name>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  Link: ResolverTypeWrapper<Link>,
+  LINKTYPE: Linktype,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   CacheControlScope: CacheControlScope,
   Upload: ResolverTypeWrapper<Scalars['Upload']>,
@@ -140,10 +171,26 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'],
   Thing: Thing,
   THINGTYPE: Thingtype,
+  Name: Name,
   String: Scalars['String'],
+  Link: Link,
+  LINKTYPE: Linktype,
   Boolean: Scalars['Boolean'],
   CacheControlScope: CacheControlScope,
   Upload: Scalars['Upload'],
+}>;
+
+export type LinkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Link'] = ResolversParentTypes['Link']> = ResolversObject<{
+  type?: Resolver<ResolversTypes['LINKTYPE'], ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  value?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+}>;
+
+export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = ResolversObject<{
+  primary?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  alternate?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
@@ -153,14 +200,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type ThingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Thing'] = ResolversParentTypes['Thing']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   type?: Resolver<ResolversTypes['THINGTYPE'], ParentType, ContextType>,
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  alternate_names?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['Name']>, ParentType, ContextType>,
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   yearpublished?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   minplayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   maxplayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  playingtime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  minplaytime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  maxplaytime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  minage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  link?: Resolver<Maybe<Array<Maybe<ResolversTypes['Link']>>>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 }>;
 
@@ -169,6 +220,8 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 }
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Link?: LinkResolvers<ContextType>,
+  Name?: NameResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Thing?: ThingResolvers<ContextType>,
   Upload?: GraphQLScalarType,

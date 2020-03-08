@@ -1,5 +1,6 @@
 import xml2js from 'xml2js'
-import { writeFile, fstat, mkdir } from 'fs'
+import { writeFile, fstat, mkdir, link } from 'fs'
+import { Link, Linktype } from '../graphql-types'
 
 interface Data {
   [key: string]: any
@@ -55,9 +56,9 @@ interface NameAttr {
 }
 
 export const extractNames = (names: NameAttr[] | NameAttr) => {
-  const result: { primary: string | null, alternatives: string[] | null } = {
+  const result: { primary: string | null, alternate: string[] | null } = {
     primary: null,
-    alternatives: null
+    alternate: null
   }
   let nameArr = names
 
@@ -67,16 +68,40 @@ export const extractNames = (names: NameAttr[] | NameAttr) => {
     if (name.attrs.type === 'primary') {
       result.primary = name.attrs.value
     } else {
-      if (!result.alternatives) {
-        result.alternatives = new Array(name.attrs.value)
+      if (!result.alternate) {
+        result.alternate = new Array(name.attrs.value)
       } else {
-        result.alternatives.push(name.attrs.value)
+        result.alternate.push(name.attrs.value)
       }
     }
   })
 
   return result
 }
+
+interface LinkAttr {
+  attrs: {
+    type: Linktype
+    id: string
+    value: string
+  }
+}
+
+export const extractLinks = (links: LinkAttr[] | LinkAttr): Link[] | null => {
+  const result: Link[] = []
+  let linkArr = links
+
+  if (!Array.isArray(linkArr)) linkArr = [linkArr]
+
+  if (linkArr.length) {
+    linkArr.forEach(({ attrs: { type, id, value } }) =>
+      result.push({ type, id: Number(id), value }))
+    return result
+  } else {
+    return null
+  }
+}
+
 
 export const extractValue = (attr: AttrValue): string | number | null => {
   const value = attr.attrs?.value
