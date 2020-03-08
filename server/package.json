@@ -6,11 +6,11 @@
   "license": "WTFPL",
   "private": true,
   "scripts": {
-    "compile": "tsc --build tsconfig.json",
+    "build": "tsc --build tsconfig.json",
+    "prestart": "yarn run build",
     "start": "nodemon public/index.js",
     "dev": "NODE_ENV=development nodemon --watch src --exec ts-node src/index.ts",
     "generate": "graphql-codegen",
-    "predeploy": "yarn run compile",
     "deploy": "now"
   },
   "dependencies": {
