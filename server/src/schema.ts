@@ -30,15 +30,17 @@ const typeDefs = gql`
     boardgameartist,
     boardgamepublisher,
     boardgameexpansion,
-    boardgamecompilation
+    boardgamecompilation,
+    boardgameaccessory
   }
 
   type Link {
     type: LINKTYPE!
     id: Int!
     value: String!
+    inbound: Boolean # Only boardgame accessories seem to have an inbound prop.
   }
-
+  
   """
   Any physical, tangible product in the BGG database is called a thing.
   """

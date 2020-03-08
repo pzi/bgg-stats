@@ -84,6 +84,7 @@ interface LinkAttr {
     type: Linktype
     id: string
     value: string
+    inbound?: string // Only boardgame accessories seem to have an inbound prop.
   }
 }
 
@@ -94,8 +95,13 @@ export const extractLinks = (links: LinkAttr[] | LinkAttr): Link[] | null => {
   if (!Array.isArray(linkArr)) linkArr = [linkArr]
 
   if (linkArr.length) {
-    linkArr.forEach(({ attrs: { type, id, value } }) =>
-      result.push({ type, id: Number(id), value }))
+    linkArr.forEach(({ attrs: { type, id, value, inbound } }) =>
+      result.push({
+        type,
+        id: Number(id),
+        value,
+        inbound: inbound ? inbound === 'true' : null
+      }))
     return result
   } else {
     return null
@@ -103,8 +109,9 @@ export const extractLinks = (links: LinkAttr[] | LinkAttr): Link[] | null => {
 }
 
 
-export const extractValue = (attr: AttrValue): string | number | null => {
-  const value = attr.attrs?.value
+export const extractValue = (attr?: AttrValue): string | number | null => {
+  if (!attr) return null
+  const value = attr.attrs?.value ?? null
   if (value === undefined) return null
   if (!isNaN(Number(value))) return Number(value)
   if (value === 'string') return value

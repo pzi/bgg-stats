@@ -21,6 +21,7 @@ export type Link = {
   type: Linktype,
   id: Scalars['Int'],
   value: Scalars['String'],
+  inbound?: Maybe<Scalars['Boolean']>,
 };
 
 export enum Linktype {
@@ -31,7 +32,8 @@ export enum Linktype {
   Boardgameartist = 'boardgameartist',
   Boardgamepublisher = 'boardgamepublisher',
   Boardgameexpansion = 'boardgameexpansion',
-  Boardgamecompilation = 'boardgamecompilation'
+  Boardgamecompilation = 'boardgamecompilation',
+  Boardgameaccessory = 'boardgameaccessory'
 }
 
 export type Name = {
@@ -184,6 +186,7 @@ export type LinkResolvers<ContextType = any, ParentType extends ResolversParentT
   type?: Resolver<ResolversTypes['LINKTYPE'], ParentType, ContextType>,
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  inbound?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 }>;
 
