@@ -1,4 +1,4 @@
-import { RESTDataSource } from 'apollo-datasource-rest'
+import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { QueryGetThingByIdArgs, MutationLoginArgs } from '../graphql-types'
 import { parseXMLResult, writeResult, extractNames, extractLinks, extractValue } from '../utils'
 
@@ -6,16 +6,33 @@ import { parseXMLResult, writeResult, extractNames, extractLinks, extractValue }
 class BoardGameGeekAPI extends RESTDataSource {
   baseURL = 'https://boardgamegeek.com/xmlapi2/'
 
+  // willSendRequest(request: RequestOptions) {
+  //   console.log('request context', this.context)
+  //   console.log('will send', request)
+  //   // request.headers.set('Authorization', this.context.token);
+  // }
+
+  didReceiveResponse(response: any) {
+    console.log('cookie?', response.headers.get('Set-Cookie'))
+    // const cookie = request.http.headers.get('Cookie');
+    // if (cookie) {
+    //   context.responseCookies.push(cookie);
+    // }
+
+    // Return the response back, even when unchanged.
+    return response;
+  }
+
   async login({ username, password }: MutationLoginArgs) {
     // Login does not require the XML API
     // TODO: Improve baseURL or use another RESTDataSource
     this.baseURL = 'https://boardgamegeek.com'
 
+
     const response = await this.post('login', { username, password }, {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: '{}'
     })
     return 'TODO'
   }
