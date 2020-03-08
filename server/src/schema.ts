@@ -23,15 +23,16 @@ const typeDefs = gql`
   }
 
   enum LINKTYPE {
-    boardgamecategory,
-    boardgamemechanic,
-    boardgamefamily,
-    boardgamedesigner,
+    boardgameaccessory,
     boardgameartist,
-    boardgamepublisher,
-    boardgameexpansion,
+    boardgamecategory,
     boardgamecompilation,
-    boardgameaccessory
+    boardgamedesigner,
+    boardgameexpansion,
+    boardgamefamily,
+    boardgameimplementation,
+    boardgamemechanic,
+    boardgamepublisher
   }
 
   type Link {

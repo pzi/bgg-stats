@@ -25,15 +25,16 @@ export type Link = {
 };
 
 export enum Linktype {
-  Boardgamecategory = 'boardgamecategory',
-  Boardgamemechanic = 'boardgamemechanic',
-  Boardgamefamily = 'boardgamefamily',
-  Boardgamedesigner = 'boardgamedesigner',
+  Boardgameaccessory = 'boardgameaccessory',
   Boardgameartist = 'boardgameartist',
-  Boardgamepublisher = 'boardgamepublisher',
-  Boardgameexpansion = 'boardgameexpansion',
+  Boardgamecategory = 'boardgamecategory',
   Boardgamecompilation = 'boardgamecompilation',
-  Boardgameaccessory = 'boardgameaccessory'
+  Boardgamedesigner = 'boardgamedesigner',
+  Boardgameexpansion = 'boardgameexpansion',
+  Boardgamefamily = 'boardgamefamily',
+  Boardgameimplementation = 'boardgameimplementation',
+  Boardgamemechanic = 'boardgamemechanic',
+  Boardgamepublisher = 'boardgamepublisher'
 }
 
 export type Name = {
