@@ -39,7 +39,7 @@ const typeDefs = gql`
     type: LINKTYPE!
     id: Int!
     value: String!
-    inbound: Boolean # Only boardgame accessories seem to have an inbound prop.
+    inbound: Boolean # Only accessories and implementations seem to have an inbound prop.
   }
   
   """

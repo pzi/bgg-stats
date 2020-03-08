@@ -11,6 +11,7 @@
     "start": "nodemon public/index.js",
     "dev": "NODE_ENV=development nodemon --watch src --exec ts-node src/index.ts",
     "generate": "graphql-codegen",
+    "predeploy": "yarn run build",
     "deploy": "now"
   },
   "dependencies": {
