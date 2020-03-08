@@ -1,6 +1,3 @@
-# Folder that stores XML and JSON query results.
-_data
-
 .DS_Store
 node_modules
 dist

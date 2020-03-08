@@ -12,10 +12,10 @@ class BoardGameGeekAPI extends RESTDataSource {
   async getThingById({ id }: QueryGetThingByIdArgs) {
     // TODO: Handle crappy responses.
     const response = await this.get('thing', { id, stats: 1 })
-    writeResult('result.xml', response)
+    if (process.env.NODE_ENV === 'development') writeResult('result.xml', response)
 
     const res = await parseXMLResult(response)
-    writeResult('result.json', res)
+    if (process.env.NODE_ENV === 'development') writeResult('result.json', res)
 
     if (res && res.items && 'item' in res.items) {
       const item = res.items.item
