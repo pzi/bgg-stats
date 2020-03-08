@@ -1,3 +1,9 @@
 {
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/public": true
+  },
+  "search.exclude": {
+    "**/public": true
+  }
 }
