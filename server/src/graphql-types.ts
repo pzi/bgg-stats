@@ -29,12 +29,29 @@ export type QueryGetThingByIdArgs = {
 export type Thing = {
    __typename?: 'Thing',
   id: Scalars['Int'],
+  type: Thingtype,
   name: Scalars['String'],
-  description: Scalars['String'],
+  alternate_names?: Maybe<Array<Scalars['String']>>,
+  description?: Maybe<Scalars['String']>,
+  thumbnail?: Maybe<Scalars['String']>,
+  image?: Maybe<Scalars['String']>,
+  yearpublished?: Maybe<Scalars['Int']>,
+  minplayers?: Maybe<Scalars['Int']>,
+  maxplayers?: Maybe<Scalars['Int']>,
 };
 
+export enum Thingtype {
+  Boardgame = 'boardgame',
+  Boardgameexpansion = 'boardgameexpansion',
+  Boardgameaccessory = 'boardgameaccessory',
+  Videogame = 'videogame',
+  Rpgitem = 'rpgitem',
+  Rpgissue = 'rpgissue'
+}
 
 
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -106,47 +123,56 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
+export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Thing: ResolverTypeWrapper<Thing>,
+  THINGTYPE: Thingtype,
   String: ResolverTypeWrapper<Scalars['String']>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   CacheControlScope: CacheControlScope,
   Upload: ResolverTypeWrapper<Scalars['Upload']>,
-};
+}>;
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
+export type ResolversParentTypes = ResolversObject<{
   Query: {},
   Int: Scalars['Int'],
   Thing: Thing,
+  THINGTYPE: Thingtype,
   String: Scalars['String'],
   Boolean: Scalars['Boolean'],
   CacheControlScope: CacheControlScope,
   Upload: Scalars['Upload'],
-};
+}>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   getThingById?: Resolver<Maybe<ResolversTypes['Thing']>, ParentType, ContextType, RequireFields<QueryGetThingByIdArgs, 'id'>>,
-};
+}>;
 
-export type ThingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Thing'] = ResolversParentTypes['Thing']> = {
+export type ThingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Thing'] = ResolversParentTypes['Thing']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['THINGTYPE'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  alternate_names?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>,
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  yearpublished?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  minplayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  maxplayers?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
-};
+}>;
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload'
 }
 
-export type Resolvers<ContextType = any> = {
+export type Resolvers<ContextType = any> = ResolversObject<{
   Query?: QueryResolvers<ContextType>,
   Thing?: ThingResolvers<ContextType>,
   Upload?: GraphQLScalarType,
-};
+}>;
 
 
 /**
