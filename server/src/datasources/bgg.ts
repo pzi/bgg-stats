@@ -11,7 +11,8 @@ class BoardGameGeekAPI extends RESTDataSource {
 
   async getThingById({ id }: QueryGetThingByIdArgs) {
     // TODO: Handle crappy responses.
-    const response = await this.get('thing', { id, stats: 1 })
+    // TODO: Handle other types than boardgame related Thing types.
+    const response = await this.get('thing', { id, stats: 0, type: "boardgame,boardgameexpansion,boardgameaccessory" })
     if (process.env.NODE_ENV === 'development') writeResult('result.xml', response)
 
     const res = await parseXMLResult(response)
