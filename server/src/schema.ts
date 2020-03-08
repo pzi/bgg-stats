@@ -5,6 +5,10 @@ const typeDefs = gql`
     getThingById(id: Int!): Thing
   }
 
+  type Mutation {
+    login(username: String! password: String!): String
+  }
+
   "The BGG API supports things of the following type."
   enum THINGTYPE {
     boardgame

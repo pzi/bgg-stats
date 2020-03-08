@@ -37,6 +37,17 @@ export enum Linktype {
   Boardgamepublisher = 'boardgamepublisher'
 }
 
+export type Mutation = {
+   __typename?: 'Mutation',
+  login?: Maybe<Scalars['String']>,
+};
+
+
+export type MutationLoginArgs = {
+  username: Scalars['String'],
+  password: Scalars['String']
+};
+
 export type Name = {
    __typename?: 'Name',
   primary: Scalars['String'],
@@ -164,6 +175,7 @@ export type ResolversTypes = ResolversObject<{
   Link: ResolverTypeWrapper<Link>,
   LINKTYPE: Linktype,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  Mutation: ResolverTypeWrapper<{}>,
   CacheControlScope: CacheControlScope,
   Upload: ResolverTypeWrapper<Scalars['Upload']>,
 }>;
@@ -179,6 +191,7 @@ export type ResolversParentTypes = ResolversObject<{
   Link: Link,
   LINKTYPE: Linktype,
   Boolean: Scalars['Boolean'],
+  Mutation: {},
   CacheControlScope: CacheControlScope,
   Upload: Scalars['Upload'],
 }>;
@@ -189,6 +202,10 @@ export type LinkResolvers<ContextType = any, ParentType extends ResolversParentT
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   inbound?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
+}>;
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'username' | 'password'>>,
 }>;
 
 export type NameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = ResolversObject<{
@@ -225,6 +242,7 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Link?: LinkResolvers<ContextType>,
+  Mutation?: MutationResolvers<ContextType>,
   Name?: NameResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Thing?: ThingResolvers<ContextType>,

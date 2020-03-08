@@ -8,6 +8,11 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
+  context: ({ req }) => {
+    return {
+      foo: 'bar'
+    }
+  },
   dataSources: () => ({
     bggAPI: new BoardGameGeekAPI()
   })

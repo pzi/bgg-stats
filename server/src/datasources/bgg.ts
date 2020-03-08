@@ -1,12 +1,23 @@
 import { RESTDataSource } from 'apollo-datasource-rest'
-import { QueryGetThingByIdArgs } from '../graphql-types'
+import { QueryGetThingByIdArgs, MutationLoginArgs } from '../graphql-types'
 import { parseXMLResult, writeResult, extractNames, extractLinks, extractValue } from '../utils'
 
 
 class BoardGameGeekAPI extends RESTDataSource {
-  constructor() {
-    super()
-    this.baseURL = 'https://boardgamegeek.com/xmlapi2/'
+  baseURL = 'https://boardgamegeek.com/xmlapi2/'
+
+  async login({ username, password }: MutationLoginArgs) {
+    // Login does not require the XML API
+    // TODO: Improve baseURL or use another RESTDataSource
+    this.baseURL = 'https://boardgamegeek.com'
+
+    const response = await this.post('login', { username, password }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: '{}'
+    })
+    return 'TODO'
   }
 
   async getThingById({ id }: QueryGetThingByIdArgs) {
