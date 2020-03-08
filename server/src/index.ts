@@ -6,6 +6,7 @@ import BoardGameGeekAPI from './datasources/bgg'
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  playground: true,
   dataSources: () => ({
     bggAPI: new BoardGameGeekAPI()
   })
