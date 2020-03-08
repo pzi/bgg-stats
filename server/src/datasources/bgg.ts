@@ -1,18 +1,7 @@
 import { RESTDataSource } from 'apollo-datasource-rest'
-import xml2js from 'xml2js'
 import { QueryGetThingByIdArgs } from '../graphql-types'
+import { parseXMLResult, writeResult, extractNames, extractValue } from '../utils'
 
-async function parseResult(data: any) {
-  try {
-    const result = await xml2js.parseStringPromise(data, {
-      attrkey: 'attrs',
-      charkey: 'content'
-    })
-    return result
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 class BoardGameGeekAPI extends RESTDataSource {
   constructor() {
@@ -21,14 +10,30 @@ class BoardGameGeekAPI extends RESTDataSource {
   }
 
   async getThingById({ id }: QueryGetThingByIdArgs) {
+    // TODO: Handle crappy responses.
     const response = await this.get('thing', { id })
-    const res = await parseResult(response)
-    if ('item' in res.items) {
-      const item = res.items.item[0]
+    writeResult('result.xml', response)
+
+    const res = await parseXMLResult(response)
+    writeResult('result.json', res)
+
+    if (res && res.items && 'item' in res.items) {
+      const item = res.items.item
+
+      // Attribue extractions
+      const names = extractNames(item.name)
+
       return {
         id: item.attrs.id,
-        name: item.name[0].attrs.value,
-        description: item.description[0]
+        type: item.attrs.type,
+        name: names.primary,
+        alternate_names: names.alternatives,
+        description: item.description,
+        thumbnail: item.thumbnail,
+        image: item.image,
+        yearpublished: extractValue(item.yearpublished),
+        minplayers: extractValue(item.minplayers),
+        maxplayers: extractValue(item.maxplayers)
       }
     } else {
       return null
