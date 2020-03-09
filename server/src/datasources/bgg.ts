@@ -12,16 +12,16 @@ class BoardGameGeekAPI extends RESTDataSource {
   //   // request.headers.set('Authorization', this.context.token);
   // }
 
-  didReceiveResponse(response: any) {
-    console.log('cookie?', response.headers.get('Set-Cookie'))
-    // const cookie = request.http.headers.get('Cookie');
-    // if (cookie) {
-    //   context.responseCookies.push(cookie);
-    // }
+  // didReceiveResponse(response: any) {
+  //   // console.log('cookie?', response.headers.get('Set-Cookie'))
+  //   // const cookie = request.http.headers.get('Cookie');
+  //   // if (cookie) {
+  //   //   context.responseCookies.push(cookie);
+  //   // }
 
-    // Return the response back, even when unchanged.
-    return response;
-  }
+  //   // Return the response back, even when unchanged.
+  //   return response;
+  // }
 
   async login({ username, password }: MutationLoginArgs) {
     // Login does not require the XML API
