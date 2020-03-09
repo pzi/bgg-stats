@@ -1,40 +1,48 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
 import { QueryGetThingByIdArgs, MutationLoginArgs } from '../graphql-types'
 import { parseXMLResult, writeResult, extractNames, extractLinks, extractValue } from '../utils'
-
+import { Response } from 'apollo-server-env'
 
 class BoardGameGeekAPI extends RESTDataSource {
   baseURL = 'https://boardgamegeek.com/xmlapi2/'
 
   // willSendRequest(request: RequestOptions) {
-  //   console.log('request context', this.context)
-  //   console.log('will send', request)
-  //   // request.headers.set('Authorization', this.context.token);
+  // console.log('request context', this.context.authCookies)
+  // console.log('will send', request)
+  // request.headers.set('Authorization', this.context.token);
+  //   return request as any
   // }
 
-  didReceiveResponse(response: any) {
-    console.log('cookie?', response.headers.get('Set-Cookie'))
-    // const cookie = request.http.headers.get('Cookie');
-    // if (cookie) {
-    //   context.responseCookies.push(cookie);
-    // }
-
-    // Return the response back, even when unchanged.
-    return response;
+  async didReceiveResponse<TResult = any>(
+    response: Response
+  ): Promise<TResult> {
+    const cookies = response.headers.get('set-cookie');
+    if (cookies) {
+      // console.log('cookies', cookies)
+      this.context.authCookies.push(cookies);
+    }
+    if (response.ok) {
+      return (this.parseBody(response) as any) as Promise<TResult>;
+    } else {
+      throw await this.errorFromResponse(response);
+    }
   }
 
   async login({ username, password }: MutationLoginArgs) {
     // Login does not require the XML API
     // TODO: Improve baseURL or use another RESTDataSource
     this.baseURL = 'https://boardgamegeek.com'
+    const response = await this.post(`login/?username=${username}&password=${password}`)
 
-
-    const response = await this.post('login', { username, password }, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    return 'TODO'
+    if (response.includes('Login Successful')) {
+      return 'Login Sucessful'
+    } else if (response.includes('Invalid Username/Password')) {
+      return 'Invalid Username/Password'
+    } else if (response.includes('Already Registered? Log In Now.')) {
+      return 'Missing Username/Password'
+    } else {
+      return 'Unknown error occurred.'
+    }
   }
 
   async getThingById({ id }: QueryGetThingByIdArgs) {
