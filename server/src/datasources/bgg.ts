@@ -1,7 +1,7 @@
-import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest'
-import { QueryGetThingByIdArgs, MutationLoginArgs } from '../graphql-types'
-import { parseXMLResult, writeResult, extractNames, extractLinks, extractValue } from '../utils'
+import { RESTDataSource } from 'apollo-datasource-rest'
 import { Response } from 'apollo-server-env'
+import { MutationLoginArgs, QueryGetThingByIdArgs } from '../graphql-types'
+import { extractLinks, extractNames, extractValue, parseXMLResult, writeResult } from '../utils'
 
 class BoardGameGeekAPI extends RESTDataSource {
   baseURL = 'https://boardgamegeek.com/xmlapi2/'
@@ -13,18 +13,16 @@ class BoardGameGeekAPI extends RESTDataSource {
   //   return request as any
   // }
 
-  async didReceiveResponse<TResult = any>(
-    response: Response
-  ): Promise<TResult> {
-    const cookies = response.headers.get('set-cookie');
+  async didReceiveResponse<TResult = any>(response: Response): Promise<TResult> {
+    const cookies = response.headers.get('set-cookie')
     if (cookies) {
       // console.log('cookies', cookies)
-      this.context.authCookies.push(cookies);
+      this.context.authCookies.push(cookies)
     }
     if (response.ok) {
-      return (this.parseBody(response) as any) as Promise<TResult>;
+      return (this.parseBody(response) as any) as Promise<TResult>
     } else {
-      throw await this.errorFromResponse(response);
+      throw await this.errorFromResponse(response)
     }
   }
 
@@ -48,11 +46,20 @@ class BoardGameGeekAPI extends RESTDataSource {
   async getThingById({ id }: QueryGetThingByIdArgs) {
     // TODO: Handle crappy responses.
     // TODO: Handle other types than boardgame related Thing types.
-    const response = await this.get('thing', { id, stats: 0, type: "boardgame,boardgameexpansion,boardgameaccessory" })
-    if (process.env.NODE_ENV === 'development') writeResult('result.xml', response)
+    const response = await this.get('thing', {
+      id,
+      stats: 0,
+      type: 'boardgame,boardgameexpansion,boardgameaccessory',
+    })
+
+    if (process.env.NODE_ENV === 'development') {
+      writeResult('result.xml', response)
+    }
 
     const res = await parseXMLResult(response)
-    if (process.env.NODE_ENV === 'development') writeResult('result.json', res)
+    if (process.env.NODE_ENV === 'development' && res) {
+      writeResult('result.json', res)
+    }
 
     if (res && res.items && 'item' in res.items) {
       const item = res.items.item
@@ -75,7 +82,7 @@ class BoardGameGeekAPI extends RESTDataSource {
         minplaytime: extractValue(item.minplaytime),
         maxplaytime: extractValue(item.maxplaytime),
         minage: extractValue(item.minage),
-        link: links
+        link: links,
       }
     } else {
       return null

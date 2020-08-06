@@ -1,6 +1,8 @@
+import { promises as fs } from 'fs'
 import xml2js from 'xml2js'
-import { writeFile, fstat, mkdir, link } from 'fs'
 import { Link, Linktype } from '../graphql-types'
+
+const { writeFile, mkdir } = fs
 
 interface Data {
   [key: string]: any
@@ -27,24 +29,26 @@ export async function parseXMLResult(data: any) {
 }
 
 /** Method to write query results to disk for validation during development. */
-export const writeResult = (filename: string, data: string | object | null) => {
-  let d = data
+export const writeResult = async (filename: string, data: string | object | null) => {
   const folder = '_data'
-  const path = `${folder}/${filename}`
 
-  if (typeof data === 'object') {
-    d = JSON.stringify(d, null, 2)
+  try {
+    await mkdir(folder)
+  } catch (error) {
+    // Ignore existing folders
+    if (error && error.code !== 'EEXIST') {
+      console.error(`Error creating folder '${folder}':`, error)
+    }
   }
 
-  mkdir(folder, err => {
-    if (err && err.code !== 'EEXIST') throw new Error(`Error creating folder '${folder}'.`)
-    return null
-  })
-
-  return writeFile(path, d, err => {
-    if (err) return console.log(err);
+  const path = `${folder}/${filename}`
+  try {
+    const d = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+    await writeFile(path, d)
     console.log(`${path} written...`)
-  })
+  } catch (error) {
+    console.error(`Error writing file '${path}':`, error)
+  }
 }
 
 interface NameAttr {
@@ -56,15 +60,15 @@ interface NameAttr {
 }
 
 export const extractNames = (names: NameAttr[] | NameAttr) => {
-  const result: { primary: string | null, alternate: string[] | null } = {
+  const result: { primary: string | null; alternate: string[] | null } = {
     primary: null,
-    alternate: null
+    alternate: null,
   }
   let nameArr = names
 
   if (!Array.isArray(nameArr)) nameArr = [nameArr]
 
-  nameArr.forEach(name => {
+  nameArr.forEach((name) => {
     if (name.attrs.type === 'primary') {
       result.primary = name.attrs.value
     } else {
@@ -100,14 +104,14 @@ export const extractLinks = (links: LinkAttr[] | LinkAttr): Link[] | null => {
         type,
         id: Number(id),
         value,
-        inbound: inbound ? inbound === 'true' : null
-      }))
+        inbound: inbound ? inbound === 'true' : null,
+      })
+    )
     return result
   } else {
     return null
   }
 }
-
 
 export const extractValue = (attr?: AttrValue): string | number | null => {
   if (!attr) return null
