@@ -8,16 +8,14 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  context: ({ req }) => {
-    return {
-      foo: 'bar'
-    }
-  },
+  context: () => ({
+    authCookies: []
+  }),
   dataSources: () => ({
     bggAPI: new BoardGameGeekAPI()
   })
 })
 
-server.listen().then(({ url }: { url: any }) => {
+server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`)
 })
