@@ -1,6 +1,6 @@
 import colors from 'colors'
-import { BoardGameValue } from './types'
-import { isBoardgame, isBoardgameWithPrivateInfo } from './utils'
+import { BoardGamePaid, BoardGameValue } from './types'
+import { isBoardgame, isBoardgameWithPrivateInfo, pad } from './utils'
 
 colors.enable()
 
@@ -34,6 +34,7 @@ export function calculateTotal(games: BoardGameValue[]) {
     }
   }, 0)
 
+  // TODO use reduce instead and create single object { withPrice, withoutPrice}
   const gamesWithoutPrice = games.filter((game) => game.paid === undefined || game.paid === null)
 
   if (gamesWithoutPrice.length === games.length) {
@@ -42,7 +43,9 @@ export function calculateTotal(games: BoardGameValue[]) {
 
   const averageGamePrice = total / (games.length - gamesWithoutPrice.length)
 
-  const gamesWithPrice = games.filter((game) => game.paid)
+  const gamesWithPrice = games.filter(
+    (game) => game.paid // exclude 0 | null | undefined
+  ) as BoardGamePaid[]
 
   gamesWithPrice
     .sort((a, b) => {
@@ -52,11 +55,11 @@ export function calculateTotal(games: BoardGameValue[]) {
       }
       return 0
     })
-    .forEach((game) => console.log(`${game.name}: $${game.paid}`))
+    .forEach((game) => console.log(`$${pad(game.paid.toFixed(2), 7, ' ')}  ${game.name}`))
 
   console.log(`==============================================================`)
 
-  gamesWithoutPrice.forEach(({ name }) => console.log(`No value: "${name}"`))
+  gamesWithoutPrice.forEach(({ name }) => console.log(`No value: ${name}`))
 
   console.log(`--------------------------------------------------------------`)
 

@@ -80,3 +80,7 @@ export interface BoardGameValue {
   name: string
   paid?: number
 }
+
+export interface BoardGamePaid extends BoardGameValue {
+  paid: number
+}
