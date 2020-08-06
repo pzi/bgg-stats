@@ -1,7 +1,7 @@
-require("dotenv").config();
-import fetch, { Response } from "node-fetch";
+require('dotenv').config()
+import fetch, { Response } from 'node-fetch'
 
-function handleResponse (response: Response) {
+function handleResponse(response: Response) {
   let contentType = response.headers.get('content-type')
   if (contentType?.includes('application/json')) {
     // return handleJSONResponse(response)
@@ -13,7 +13,9 @@ function handleResponse (response: Response) {
   }
 }
 
-type fetchCollection = (callback: (error: string | null, status?: number | null, header?: any, body?: any) => void) => void
+type fetchCollection = (
+  callback: (error: string | null, status?: number | null, header?: any, body?: any) => void
+) => void
 export const fetchCollection: fetchCollection = (callback) => {
   const query = new URLSearchParams()
   query.set('username', `${process.env.BGG_USERNAME}`)
@@ -25,17 +27,13 @@ export const fetchCollection: fetchCollection = (callback) => {
   query.set('wishlist', '0')
   query.set('want', '0')
 
-  fetch(
-    `https://boardgamegeek.com/xmlapi2/collection/?${query.toString()}`,
-    {
-      method: "POST",
-      headers: {
-        Cookie:
-        `bggusername=${process.env.BGG_USERNAME}; bggpassword=${process.env.BGG_PASSWORD}`
-      }
-    }
-  ).then(handleResponse)
-    .then(text => callback(null, null, null, text))
-    .catch(error => callback(error));
+  fetch(`https://boardgamegeek.com/xmlapi2/collection/?${query.toString()}`, {
+    method: 'POST',
+    headers: {
+      Cookie: `bggusername=${process.env.BGG_USERNAME}; bggpassword=${process.env.BGG_PASSWORD}`,
+    },
+  })
+    .then(handleResponse)
+    .then((text) => callback(null, null, null, text))
+    .catch((error) => callback(error))
 }
-

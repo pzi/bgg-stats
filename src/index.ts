@@ -1,15 +1,15 @@
 import fs from 'fs'
 import xml2js from 'xml2js'
 import yargs from 'yargs'
-import { reformatter, calculateTotal } from './reformatter'
 import { fetchCollection } from './fetch'
+import { calculateTotal, reformatter } from './reformatter'
 import { isCollection } from './utils'
 
 const argv = yargs
   .option('path', {
     alias: 'p',
     describe: 'Path to the XML file to parse.',
-    type: 'string'
+    type: 'string',
   })
   .help().argv
 
@@ -17,7 +17,7 @@ async function parseResult(data: any) {
   try {
     const result = await xml2js.parseStringPromise(data, {
       attrkey: 'attrs',
-      charkey: 'content'
+      charkey: 'content',
     })
     if (isCollection(result)) {
       calculateTotal(reformatter(result.items.item))
